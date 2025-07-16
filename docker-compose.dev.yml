@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./api
+    container_name: inventory-api-dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api/app:/app/app
+      - ./api:/app/data
+      - ./.env:/app/app/.env
+    environment:
+      - ENV=development
+      - WATCHFILES_FORCE_POLLING=1
+    restart: unless-stopped
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    container_name: inventory-client-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client/src:/app/src
+      - ./client/public:/app/public
+      - /app/node_modules
+    depends_on:
+      - api
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+      - CHOKIDAR_USEPOLLING=true
+      - WDS_SOCKET_PORT=3000
+    restart: unless-stopped
