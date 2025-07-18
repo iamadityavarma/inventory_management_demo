@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ 
 # Setup development environment
 if [ "$1" == "setup" ]; then
   echo "Setting up development environment..."
@@ -9,8 +9,9 @@ if [ "$1" == "setup" ]; then
   echo "Setup complete! Activate the virtual environment with: source venv/bin/activate"
   exit 0
 fi
-
+ 
 # Copy the CSV file into the api directory (for backward compatibility)
+<<<<<<< HEAD
 echo "Copying CSV file for Docker build..."
 #cp inventory\(in\).csv api/app/data.csv
 
@@ -20,14 +21,29 @@ cd api
 docker build --no-cache --platform linux/amd64 -t iamadityavarma/inventory_management:api .
 docker push iamadityavarma/inventory_management:api
 
+=======
+# echo "Copying CSV file for Docker build..."
+# cp inventory\(in\).csv api/app/data.csv
+ 
+# Build the API image
+echo "Building API image..."
+cd api
+docker build -t iamadityavarma/inventory_management:api .
+docker push iamadityavarma/inventory_management:api
+>>>>>>> 1636a83d47418b622dad09d626fdc7b561597d90
 cd ..
-
+ 
 # Build the Client image
 echo "Building Client image..."
 cd client
+<<<<<<< HEAD
 docker build --no-cache --platform linux/amd64 -t iamadityavarma/inventory_management:client \
   --build-arg REACT_APP_API_URL=https://inventory-app-api-fefyd0cfa2bye6c0.centralus-01.azurewebsites.net .
+=======
+docker build -t iamadityavarma/inventory_management:client \
+  --build-arg REACT_APP_API_URL=https://inventory-api-web-h9bwaheyfsg9g3bm.eastus-01.azurewebsites.net .
+>>>>>>> 1636a83d47418b622dad09d626fdc7b561597d90
 docker push iamadityavarma/inventory_management:client
 cd ..
-
+ 
 echo "Build and push complete!"
